@@ -5,6 +5,7 @@ import time
 import json
 from collections import OrderedDict
 from pprint import pprint
+from dataHandling import *
 
 from slackclient import SlackClient
 
@@ -60,7 +61,10 @@ def bot_call_command(messageJson):
         return False, None
 
 
+##
 def define_command_func(command, event):
+    ##정해진 명령어로 들어왔는지 검사한다.
+
     ## 커멘드에서 모든 공백 제거
     command = command.replace(" ", "")
     ## 채널 코드
@@ -87,12 +91,15 @@ def define_command_func(command, event):
 
     if command_juge:
         ## 기능 있을 때.
-
         yesDefineCommand = ""
         for cmd in defineCommand[int(command_Number)]:
             yesDefineCommand += (cmd + ", ")
 
-        select_channel_DM(channel, yesDefineCommand)
+        # select_channel_DM(channel, yesDefineCommand)
+
+        DM_str = command_User_Event(int(command_Number), event)
+        select_channel_DM(channel, DM_str)
+
     elif command == "help":
         ## 없는 명령어 쳤을때 => help 명령어를 쳤을때만나오게..
         notDefineCommand = "다음 중 알맞은 명령 입력하세요\n"
@@ -103,8 +110,6 @@ def define_command_func(command, event):
 
         select_channel_DM(channel, notDefineCommand)
 
-        # print(defineCommand)
-
 
 def select_channel_DM(channel, massage):
     # Sends the response back to the channel
@@ -113,26 +118,6 @@ def select_channel_DM(channel, massage):
         channel=channel,
         text=massage
     )
-
-
-def json_userData_update():
-    ## 슬랙 봇 최초 실행하거나, 새로운 유저가 들어왔을 때 돌아간다.
-    exitence = os.path.isfile("data.json") ## 파일 있는지 체크
-    if exitence == False: ## 파일이 없다면.
-        file_data = OrderedDict()
-        file_data["userName_code_match"] = userName_code_match ## 현재 슬랙에 참여하고 있는 사람들 정보 json에 저장한다.
-
-        with open('data.json', 'w', encoding="utf-8") as make_file: ## json 파일 작성.
-            json.dump(file_data, make_file, ensure_ascii=False, indent="\t")
-    else:## 파일이 있다면 현재 있는 사람들 데이터만 업데이트.
-        ## 파일 데이터 불러온다.
-        with open('data.json', encoding="utf-8") as data_file:
-            data = json.load(data_file, object_pairs_hook=OrderedDict)
-        ## 파일 데이터의 userName_code_match만 새로 쓴다 -> 업데이트
-        data["userName_code_match"] = userName_code_match
-        ## json 파일 쓰기.
-        with open('data.json', 'w', encoding="utf-8") as make_file:
-            json.dump(data, make_file, ensure_ascii=False, indent="\t")
 
 
 if __name__ == "__main__":
@@ -148,10 +133,11 @@ if __name__ == "__main__":
         for user in user_list["members"]:
             userName_code_match[user["id"]] = user["profile"]["real_name_normalized"]
 
-        json_userData_update()  ##json 파일이 없으면 생성, 있으면 추가된 유저 입력.
+        json_userData_update(userName_code_match)  ##json 파일이 없으면 생성, 있으면 추가된 유저 입력.
 
-        print(userName_code_match)
+        # print(userName_code_match)
 
+        ## 슬랙봇 시작.
         while True:
             sleck_event_sensing(slack_client.rtm_read())
             time.sleep(RTM_READ_DELAY)
