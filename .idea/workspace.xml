@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="2535e73b-d66a-4ba4-a3e8-772783f2dc75" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/workingTimeMemo/dataHandling.py" beforeDir="false" afterPath="$PROJECT_DIR$/workingTimeMemo/dataHandling.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/workingTimeMemo/work.py" beforeDir="false" afterPath="$PROJECT_DIR$/workingTimeMemo/work.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -12,14 +11,14 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5">
+    <splitter split-orientation="horizontal" split-proportion="0.47430596">
       <split-first>
         <leaf>
           <file pinned="false" current-in-tab="false">
             <entry file="file://$USER_HOME$/Library/Caches/Transmit/34831C0C-2C69-42A3-A395-518526EEEEEB/101.101.161.86/root/dataHandling.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="139">
-                  <caret line="107" column="32" lean-forward="true" selection-end-line="162" />
+                <state relative-caret-position="283">
+                  <caret line="196" lean-forward="true" selection-end-line="226" />
                   <folding>
                     <element signature="e#0#9#0" expanded="true" />
                   </folding>
@@ -27,11 +26,27 @@
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="false">
+          <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/workingTimeMemo/dataHandling.py">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="863">
-                  <caret line="162" lean-forward="true" selection-start-line="162" selection-end-line="162" />
+                  <caret line="231" selection-start-line="231" selection-end-line="231" />
+                  <folding>
+                    <element signature="e#0#9#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$USER_HOME$/Library/Caches/Transmit/F0730736-3357-4BBF-8D54-763F9A9FF5DC/101.101.161.86/root/work.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="160">
+                  <caret line="123" column="15" selection-end-line="156" selection-end-column="70" />
                   <folding>
                     <element signature="e#0#9#0" expanded="true" />
                   </folding>
@@ -52,26 +67,10 @@
             </entry>
           </file>
           <file pinned="false" current-in-tab="false">
-            <entry file="file://$USER_HOME$/Library/Caches/Transmit/550D9D2F-D4AE-49F0-B7CF-0D063E0FC8B1/101.101.161.86/root/data.json">
+            <entry file="file://$USER_HOME$/Library/Caches/Transmit/1566DEE1-2B3A-46ED-8838-D0789380FDE8/101.101.161.86/root/data.json">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="532">
-                  <caret line="28" column="41" lean-forward="true" selection-start-line="28" selection-start-column="41" selection-end-line="28" selection-end-column="41" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf>
-          <file pinned="false" current-in-tab="true">
-            <entry file="file://$USER_HOME$/Library/Caches/Transmit/F0730736-3357-4BBF-8D54-763F9A9FF5DC/101.101.161.86/root/work.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="98">
-                  <caret line="115" column="29" lean-forward="true" selection-end-line="156" selection-end-column="70" />
-                  <folding>
-                    <element signature="e#0#9#0" expanded="true" />
-                  </folding>
+                <state relative-caret-position="798">
+                  <caret line="80" column="5" lean-forward="true" selection-start-line="80" selection-start-column="5" selection-end-line="80" selection-end-column="5" />
                 </state>
               </provider>
             </entry>
@@ -91,6 +90,7 @@
     <findStrings>
       <find>starterbot_id</find>
       <find>define_command_func</find>
+      <find>json_file_reststart_insert</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -116,6 +116,8 @@
         <option value="$USER_HOME$/Library/Caches/Transmit/BB491D21-56AE-4BC4-9C9C-E7E1C5A1534C/101.101.161.86/root/data.json" />
         <option value="$USER_HOME$/Library/Caches/Transmit/601A962B-94C8-42D6-A2BC-8D4A335BBBAF/101.101.161.86/root/dataHandling.py" />
         <option value="$USER_HOME$/Library/Caches/Transmit/F0730736-3357-4BBF-8D54-763F9A9FF5DC/101.101.161.86/root/work.py" />
+        <option value="$USER_HOME$/Library/Caches/Transmit/550D9D2F-D4AE-49F0-B7CF-0D063E0FC8B1/101.101.161.86/root/data.json" />
+        <option value="$USER_HOME$/Library/Caches/Transmit/9A1C7E56-0E45-49C2-8428-5C45312DD6C8/101.101.161.86/root/data.json" />
         <option value="$USER_HOME$/Library/Caches/Transmit/34831C0C-2C69-42A3-A395-518526EEEEEB/101.101.161.86/root/dataHandling.py" />
         <option value="$PROJECT_DIR$/workingTimeMemo/dataHandling.py" />
         <option value="$PROJECT_DIR$/workingTimeMemo/work.py" />
@@ -181,12 +183,12 @@
       <option name="presentableId" value="Default" />
       <updated>1550406621001</updated>
       <workItem from="1550406623855" duration="46000" />
-      <workItem from="1550406731398" duration="23052000" />
+      <workItem from="1550406731398" duration="30419000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="23098000" />
+    <option name="totallyTimeSpent" value="30465000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1920" y="-193" width="1920" height="1057" extended-state="6" />
@@ -463,15 +465,62 @@
     </entry>
     <entry file="file://$USER_HOME$/Library/Caches/Transmit/550D9D2F-D4AE-49F0-B7CF-0D063E0FC8B1/101.101.161.86/root/data.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="532">
-          <caret line="28" column="41" lean-forward="true" selection-start-line="28" selection-start-column="41" selection-end-line="28" selection-end-column="41" />
+        <state relative-caret-position="399">
+          <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Library/Caches/Transmit/9A1C7E56-0E45-49C2-8428-5C45312DD6C8/101.101.161.86/root/data.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="494">
+          <caret line="26" lean-forward="true" selection-start-line="26" selection-end-line="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Library/Caches/Transmit/7B0E8BD1-1B34-4105-877B-B073B85044FA/101.101.161.86/root/data.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="304">
+          <caret line="16" column="25" lean-forward="true" selection-start-line="16" selection-start-column="25" selection-end-line="16" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Library/Caches/Transmit/B433BEF9-2F09-4599-9187-905676957119/101.101.161.86/root/data.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="513">
+          <caret line="27" column="35" selection-start-line="27" selection-start-column="21" selection-end-line="27" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Library/Caches/Transmit/4C7C92D3-24E3-435F-86E6-F033967FBB76/101.101.161.86/root/data.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-92" />
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Library/Caches/Transmit/D564E9E9-4EA4-44DA-8123-6C42FC74CC75/101.101.161.86/root/data.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="209">
+          <caret line="11" column="26" lean-forward="true" selection-start-line="11" selection-start-column="26" selection-end-line="11" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Library/Caches/Transmit/3CB2E55D-5349-409F-AD79-7465138E9754/101.101.161.86/root/data.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="744">
+          <caret line="62" column="25" selection-start-line="62" selection-start-column="25" selection-end-line="62" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Library/Caches/Transmit/1566DEE1-2B3A-46ED-8838-D0789380FDE8/101.101.161.86/root/data.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="798">
+          <caret line="80" column="5" lean-forward="true" selection-start-line="80" selection-start-column="5" selection-end-line="80" selection-end-column="5" />
         </state>
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/Library/Caches/Transmit/34831C0C-2C69-42A3-A395-518526EEEEEB/101.101.161.86/root/dataHandling.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="139">
-          <caret line="107" column="32" lean-forward="true" selection-end-line="162" />
+        <state relative-caret-position="283">
+          <caret line="196" lean-forward="true" selection-end-line="226" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
@@ -481,7 +530,7 @@
     <entry file="file://$PROJECT_DIR$/workingTimeMemo/dataHandling.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="863">
-          <caret line="162" lean-forward="true" selection-start-line="162" selection-end-line="162" />
+          <caret line="231" selection-start-line="231" selection-end-line="231" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
@@ -490,8 +539,8 @@
     </entry>
     <entry file="file://$USER_HOME$/Library/Caches/Transmit/F0730736-3357-4BBF-8D54-763F9A9FF5DC/101.101.161.86/root/work.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="98">
-          <caret line="115" column="29" lean-forward="true" selection-end-line="156" selection-end-column="70" />
+        <state relative-caret-position="160">
+          <caret line="123" column="15" selection-end-line="156" selection-end-column="70" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
