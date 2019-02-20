@@ -48,12 +48,30 @@ def command_User_Event(command_Number, eventJson):
             strTime = time.strftime("%Y년 %m월 %d일 %H시 %M분")
             DM_str = userName+"님이 "+strTime +"부터 일하는 시간을 체크합니다."
             return DM_str
+        else:
+            DM_str = "이미 일을 하고 있습니다."
+            return DM_str
     elif command_Number == 1:
-        return DM_str
-        pass
+        insert_juge, exceptionDM = json_file_reststart_insert(jsonData, userCode, nowDate, nowTime)
+        if insert_juge:
+            userName = jsonData["userName_code_match"][userCode]
+            strTime = time.strftime("%Y년 %m월 %d일 %H시 %M분")
+            DM_str = userName+"님이 "+strTime +"부터 쉬기 시작했습니다."
+            return DM_str
+        else:
+            DM_str = exceptionDM
+            return DM_str
     elif command_Number == 2:
-        return DM_str
-        pass
+        ## 휴식 정지
+        insert_juge, exceptionDM = json_file_restend_insert(jsonData, userCode, nowDate, nowTime)
+        if insert_juge:
+            userName = jsonData["userName_code_match"][userCode]
+            strTime = time.strftime("%Y년 %m월 %d일 %H시 %M분")
+            DM_str = userName+"님이 "+strTime +"부터 다시 일하기 시작했습니다."
+            return DM_str
+        else:
+            DM_str = exceptionDM
+            return DM_str
     elif command_Number == 3:
         return DM_str
         pass
@@ -70,8 +88,43 @@ def command_User_Event(command_Number, eventJson):
         return DM_str
         pass
 
+def json_file_restend_insert(jsonData, userCode, nowDate, nowTime):
+    size = len(jsonData["workingTimeData"][userCode][nowDate])
+    if size > 0:
+        state = list(jsonData["workingTimeData"][userCode][nowDate][size-1].values())[0]
+        if state == "restStartTime":
+            restEndInsert = {nowTime : "restEndTime"}
+            jsonData["workingTimeData"][userCode][nowDate].append(restEndInsert)
+            write_json_data(jsonData)
+            return True, None
+        else:
+            return False, "휴식중이 아닙니다."
+    else:
+        return False, "일을 시작 하지 않았습니다."
+
+def json_file_reststart_insert(jsonData, userCode, nowDate, nowTime):
+    ## 마지막에 일시작, 휴식끝, 워킹체크가 있어야지 쓸수있음.
+    ## 휴식시작, 일종료 있거나 일시작이 없으면 쓸수 없음.
+    size = len(jsonData["workingTimeData"][userCode][nowDate])
+    if size > 0:
+        state = list(jsonData["workingTimeData"][userCode][nowDate][size-1].values())[0]
+        if state == "workingStartTime" or state == "restEndTime" or state == "workingCheckTime":
+            restStartInsert = {nowTime : "restStartTime"}
+            jsonData["workingTimeData"][userCode][nowDate].append(restStartInsert)
+            write_json_data(jsonData)
+            return True, None
+        elif state == "restStartTime":
+            exceptionDM = "이미 쉬고 있습니다."
+            return False, exceptionDM
+        elif state == "nonResponseTime":
+            exceptionDM = "응답이 없어 시간 체크되지 않았습니다.\n 응, yes, y 중에서 입력해주세요."
+    else:
+        exceptionDM = "일을 시작하지 않았습니다."
+        return  False, exceptionDM
+
 
 def json_file_startTime_insert(jsonData, userCode, nowDate, nowTime):
+    ## 일 시작 json 파일 작성.
     size = len(jsonData["workingTimeData"][userCode][nowDate])
     if size == 0:
         startInsert = {nowTime: "workingStartTime"}
@@ -106,3 +159,4 @@ def write_json_data(jsonData):
     ## 파일 쓰기.
     with open('data.json', 'w', encoding="utf-8") as make_file:
         json.dump(jsonData, make_file, ensure_ascii=False, indent="\t")
+

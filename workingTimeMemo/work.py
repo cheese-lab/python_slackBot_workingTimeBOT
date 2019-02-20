@@ -27,12 +27,22 @@ def sleck_event_sensing(slack_events):
         if event["type"] == "message" and (not ("subtype" in event)):
             print("===================================================")
             print(event)  ## 이벤트 json
-            ## self_call_command 함수에서 자기 자신 호출했는가?
-            call_juge, command = bot_call_command(event)
 
-            if call_juge:
+            ## self_call_command 함수에서 자기 자신 호출했는가?
+            # call_juge, command = bot_call_command(event)
+
+            bot_id, command = parse_direct_mention(event["text"])
+
+            if bot_id == starterbot_id:
                 ## 정해진 호출을 하고 text 입력했으면 명령어가 유효한지 검사.
-                define_command_func(command, event)
+                # define_command_func(command, event)
+                return command, event
+    return None, None
+
+
+def parse_direct_mention(message_text):
+    matches = re.search(MENTION_REGEX, message_text)
+    return (matches.group(1), matches.group(2).strip()) if matches else (None, None)
 
 
 def self_call_command(messageJson):
@@ -52,8 +62,8 @@ def bot_call_command(messageJson):
     MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
     matches = re.search(MENTION_REGEX, messageJson["text"])
     callUserCode = matches.group(1)
-    command = matches.group(2)
-    userCode = messageJson["user"]
+    command = matches.group(2).strip()
+
     ## 봇을 호출했는지 검사.
     if starterbot_id == callUserCode:
         return True, command
@@ -139,7 +149,9 @@ if __name__ == "__main__":
 
         ## 슬랙봇 시작.
         while True:
-            sleck_event_sensing(slack_client.rtm_read())
+            command, event = sleck_event_sensing(slack_client.rtm_read())
+            if command:
+                define_command_func(command, event)
             time.sleep(RTM_READ_DELAY)
     else:
         print("Connection failed. Exception traceback printed above.")
