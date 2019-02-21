@@ -3,6 +3,7 @@ import json
 import time
 
 from collections import OrderedDict
+from work import *
 
 
 def json_userData_update(userName_code_match):
@@ -29,7 +30,8 @@ def command_User_Event(command_Number, eventJson):
     userCode = eventJson["user"]
     nowDate = time.strftime('%Y%m%d')
     nowTime = time.strftime('%H%M')
-    print(nowDate)
+    channel = eventJson["channel"]
+    # print(nowDate)
 
     with open('data.json', encoding="utf-8") as data_file:
         jsonData = json.load(data_file, object_pairs_hook=OrderedDict)
@@ -44,9 +46,10 @@ def command_User_Event(command_Number, eventJson):
         ## 시작 시간 배열에 넣기.
         insert_juge = json_file_startTime_insert(jsonData, userCode, nowDate, nowTime)
         if insert_juge:
+            userChannelUpdate(jsonData, userCode, channel)
             userName = jsonData["userName_code_match"][userCode]
             strTime = time.strftime("%Y년 %m월 %d일 %H시 %M분")
-            DM_str = userName + "님이 " + strTime + "부터 일하는 시간을 체크합니다."
+            DM_str = userName+"님이 "+strTime +"부터 일하는 시간을 체크합니다."
             return DM_str
         else:
             DM_str = "이미 일을 하고 있습니다."
@@ -54,9 +57,10 @@ def command_User_Event(command_Number, eventJson):
     elif command_Number == 1:
         insert_juge, exceptionDM = json_file_reststart_insert(jsonData, userCode, nowDate, nowTime)
         if insert_juge:
+            userChannelUpdate(jsonData, userCode, channel)
             userName = jsonData["userName_code_match"][userCode]
             strTime = time.strftime("%Y년 %m월 %d일 %H시 %M분")
-            DM_str = userName + "님이 " + strTime + "부터 쉬기 시작했습니다."
+            DM_str = userName+"님이 "+strTime +"부터 쉬기 시작했습니다."
             return DM_str
         else:
             DM_str = exceptionDM
@@ -65,9 +69,10 @@ def command_User_Event(command_Number, eventJson):
         ## 휴식 정지
         insert_juge, exceptionDM = json_file_restend_insert(jsonData, userCode, nowDate, nowTime)
         if insert_juge:
+            userChannelUpdate(jsonData, userCode, channel)
             userName = jsonData["userName_code_match"][userCode]
             strTime = time.strftime("%Y년 %m월 %d일 %H시 %M분")
-            DM_str = userName + "님이 " + strTime + "부터 다시 일하기 시작했습니다."
+            DM_str = userName+"님이 "+strTime +"부터 다시 일하기 시작했습니다."
             return DM_str
         else:
             DM_str = exceptionDM
@@ -75,15 +80,26 @@ def command_User_Event(command_Number, eventJson):
     elif command_Number == 3:
         insert_juge, exceptionDM = json_file_workingend_insert(jsonData, userCode, nowDate, nowTime)
         if insert_juge:
+            userChannelUpdate(jsonData, userCode, channel)
             userName = jsonData["userName_code_match"][userCode]
             strTime = time.strftime("%Y년 %m월 %d일 %H시 %M분")
-            DM_str = userName + "님이 " + strTime + "에 일하기를 종료했습니다."
+            DM_str = userName+"님이 "+strTime +"에 일하기를 종료했습니다."
             return DM_str
         else:
             DM_str = exceptionDM
             return DM_str
     elif command_Number == 4:
-        working_check_DM()
+        insert_juge, exceptionDM = json_file_yes_insert(jsonData, userCode, nowDate, nowTime)
+
+        if insert_juge:
+            userChannelUpdate(jsonData, userCode, channel)
+            userName = jsonData["userName_code_match"][userCode]
+            strTime = time.strftime("%Y년 %m월 %d일 %H시 %M분")
+            DM_str = userName+"님이 "+strTime +"에 일을 하고 있습니다."
+            return DM_str
+        else:
+            DM_str = exceptionDM
+            return DM_str
         return DM_str
         pass
     elif command_Number == 5:
@@ -94,13 +110,25 @@ def command_User_Event(command_Number, eventJson):
     else:
         return DM_str
 
-
+def json_file_yes_insert(jsonData, userCode, nowDate, nowTime):
+    size = len(jsonData["workingTimeData"][userCode][nowDate])
+    if size > 0:
+        state = list(jsonData["workingTimeData"][userCode][nowDate][size-1].keys())[0]
+        if state == "nonResponseTime" or state == "restEndTime" or state == "workingCheckTime":
+            yesWorkingTime = {"workingCheckTime" : nowTime}
+            jsonData["workingTimeData"][userCode][nowDate].append(yesWorkingTime)
+            write_json_data(jsonData)
+            return True, None
+        else:
+            return False, "휴식 중입니다. ~~"
+    else:
+        return False, "일을 시작하지 않았습니다"
 def json_file_workingend_insert(jsonData, userCode, nowDate, nowTime):
     size = len(jsonData["workingTimeData"][userCode][nowDate])
     if size > 0:
-        state = list(jsonData["workingTimeData"][userCode][nowDate][size - 1].keys())[0]
+        state = list(jsonData["workingTimeData"][userCode][nowDate][size-1].keys())[0]
         if state != "workingEndTime":
-            workingEndInsert = {"workingEndTime": nowTime}
+            workingEndInsert = {"workingEndTime" : nowTime}
             jsonData["workingTimeData"][userCode][nowDate].append(workingEndInsert)
             write_json_data(jsonData)
             return True, None
@@ -113,9 +141,9 @@ def json_file_workingend_insert(jsonData, userCode, nowDate, nowTime):
 def json_file_restend_insert(jsonData, userCode, nowDate, nowTime):
     size = len(jsonData["workingTimeData"][userCode][nowDate])
     if size > 0:
-        state = list(jsonData["workingTimeData"][userCode][nowDate][size - 1].keys())[0]
+        state = list(jsonData["workingTimeData"][userCode][nowDate][size-1].keys())[0]
         if state == "restStartTime":
-            restEndInsert = {"restEndTime": nowTime}
+            restEndInsert = {"restEndTime" : nowTime}
             jsonData["workingTimeData"][userCode][nowDate].append(restEndInsert)
             write_json_data(jsonData)
             return True, None
@@ -124,15 +152,14 @@ def json_file_restend_insert(jsonData, userCode, nowDate, nowTime):
     else:
         return False, "일을 시작 하지 않았습니다."
 
-
 def json_file_reststart_insert(jsonData, userCode, nowDate, nowTime):
     ## 마지막에 일시작, 휴식끝, 워킹체크가 있어야지 쓸수있음.
     ## 휴식시작, 일종료 있거나 일시작이 없으면 쓸수 없음.
     size = len(jsonData["workingTimeData"][userCode][nowDate])
     if size > 0:
-        state = list(jsonData["workingTimeData"][userCode][nowDate][size - 1].keys())[0]
+        state = list(jsonData["workingTimeData"][userCode][nowDate][size-1].keys())[0]
         if state == "workingStartTime" or state == "restEndTime" or state == "workingCheckTime":
-            restStartInsert = {"restStartTime": nowTime}
+            restStartInsert = {"restStartTime" : nowTime}
             jsonData["workingTimeData"][userCode][nowDate].append(restStartInsert)
             write_json_data(jsonData)
             return True, None
@@ -148,19 +175,19 @@ def json_file_reststart_insert(jsonData, userCode, nowDate, nowTime):
         return False, exceptionDM
     else:
         exceptionDM = "일을 시작하지 않았습니다."
-        return False, exceptionDM
+        return  False, exceptionDM
 
 
 def json_file_startTime_insert(jsonData, userCode, nowDate, nowTime):
     ## 일 시작 json 파일 작성.
     size = len(jsonData["workingTimeData"][userCode][nowDate])
     if size == 0:
-        startInsert = {"workingStartTime": nowTime}
+        startInsert = {"workingStartTime" : nowTime}
         jsonData["workingTimeData"][userCode][nowDate].append(startInsert)
         write_json_data(jsonData)
         return True
     else:
-        state = list(jsonData["workingTimeData"][userCode][nowDate][size - 1].keys())[0]
+        state = list(jsonData["workingTimeData"][userCode][nowDate][size-1].keys())[0]
         if state == "workingEndTime":
             startInsert = {"workingStartTime": nowTime}
             jsonData["workingTimeData"][userCode][nowDate].append(startInsert)
@@ -196,27 +223,25 @@ def write_json_data(jsonData):
         json.dump(jsonData, make_file, ensure_ascii=False, indent="\t")
 
 
-workingCheckList = {}
+def working_check_List():
+    workingCheckList = {}
 
-
-def working_check_DM():
     ## 마지막 상태에 따라서 DM 날릴지 확인하는 로직.
     nowDate = time.strftime('%Y%m%d')
     with open('data.json', encoding="utf-8") as data_file:
         jsonData = json.load(data_file, object_pairs_hook=OrderedDict)
 
-    for userCode, objectValue in jsonData["workingTimeData"].items():
-        print(userCode)
-        arrayValue = list(objectValue[nowDate])
-        size = len(arrayValue)
-        userLastState = list(arrayValue[size - 1].keys())[0]
-        userLastTime = list(arrayValue[size - 1].values())[0]
-        ## 일시작, 휴식끝, 30분 DM 체크.
-        if userLastState == "workingStartTime" or userLastState == "restEndTime" or userLastState == "workingCheckTime":
-            workingCheckList[userCode] = userLastTime
+    for userCode, objectValue  in jsonData["workingTimeData"].items():
+        if nowDate in objectValue:
+            arrayValue = list(objectValue[nowDate])
+            size = len(arrayValue)
+            userLastState = list(arrayValue[size-1].keys())[0]
+            userLastTime = list(arrayValue[size-1].values())[0]
+            ## 일시작, 휴식끝, 30분 DM 인것만 체크.
+            if userLastState == "workingStartTime" or userLastState == "restEndTime" or userLastState == "workingCheckTime":
+                workingCheckList[userCode] = userLastTime
 
-    # print(workingCheckList)
-
+    return workingCheckList
 
 def working_time_calculation():
     ## 시간 산출 프로그래밍
@@ -224,8 +249,27 @@ def working_time_calculation():
     with open('data.json', encoding="utf-8") as data_file:
         jsonData = json.load(data_file, object_pairs_hook=OrderedDict)
 
-    for userCode, objectValue in jsonData["workingTimeData"].items():
+    for userCode, objectValue  in jsonData["workingTimeData"].items():
         for arrayValue in objectValue[nowDate]:
             print(arrayValue)
 
 
+
+def workingCheckDM(userCode, nowTime):
+    with open('data.json', encoding="utf-8") as data_file:
+        jsonData = json.load(data_file, object_pairs_hook=OrderedDict)
+
+    nowDate = time.strftime('%Y%m%d')
+
+    channel = jsonData["userDMChannel"][userCode]
+
+    nonTimeInsert = {"nonResponseTime": nowTime}
+    jsonData["workingTimeData"][userCode][nowDate].append(nonTimeInsert)
+    write_json_data(jsonData)
+    # return True
+    dm = "<@"+userCode+"> 거기있니?"
+    select_channel_DM(channel, dm)
+
+def userChannelUpdate(jsonData, userCode, channel):
+    jsonData["userDMChannel"][userCode] = channel
+    write_json_data(jsonData)
