@@ -89,7 +89,8 @@ def define_command_func(command, event):
                      ["3", "일종료", "workend", "we"],
                      ["4", "응", "yes", "y"],
                      ["5", "오늘피드백", "feedbacktoday", "fbto"],
-                     ["6", "전체피드백", "feedbackfull", "fbful"]]
+                     ["6", "전체피드백", "feedbackfull", "fbful"],
+                     ["7", "state"]]
     command_juge = False
     command_Number = None
 
@@ -141,6 +142,11 @@ class AsyncTask:
         workingCheckList = working_check_List()
         nowTime = time.strftime('%H%M')
         print(workingCheckList)
+        if nowTime == "2359":
+            ## 정각일때 일하는 사람에게 DM 보내기
+            ## 새롭게 일 시작하라고 알림 하기..
+            ##
+            pass
 
         for key, value in workingCheckList.items():
             minNowTime = (int(nowTime[0:2]) * 60) + int(nowTime[2:4])

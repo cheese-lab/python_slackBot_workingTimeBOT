@@ -103,12 +103,104 @@ def command_User_Event(command_Number, eventJson):
         return DM_str
         pass
     elif command_Number == 5:
-        return DM_str
-        pass
+        ## 오늘 현재까지 일한 시간 체크.
+        insert_juge, exceptionDM = today_working_timeStatus(jsonData, userCode, nowDate,nowTime)
+        if insert_juge:
+            strTime = time.strftime("%Y년 %m월 %d일")
+            userName = jsonData["userName_code_match"][userCode]
+            DM_str = "["+strTime+"] "+userName+"님이 " + exceptionDM
+            return DM_str
+        else :
+            DM_str = exceptionDM
+            return DM_str
     elif command_Number == 6:
         return DM_str
+    elif command_Number == 7:
+        exceptionDM = user_state_feedback(jsonData, userCode, nowDate, nowTime)
+
+        return exceptionDM
     else:
         return DM_str
+
+def today_working_timeStatus(jsonData, userCode, nowDate, nowTime):
+    size = len(jsonData["workingTimeData"][userCode][nowDate])
+
+
+    if size > 0:
+        startEndList = working_time_startEndList(jsonData, userCode, nowDate, nowTime)
+        resultMinute = startEndTime_calculation(startEndList)
+        h = str(int(resultMinute / 60))
+        m = str(resultMinute % 60)
+        return True, h + "시간" + m + "분 동안 일했습니다."
+    else :
+        return False, "일을 시작하지 않았습니다."
+
+    return False, None
+
+def startEndTime_calculation(startEndList):
+    resultMinute = 0
+    for startEnd in startEndList:
+        startTime = (int(startEnd[0][0:2]) * 60) + int(startEnd[0][2:4])
+        endTime = (int(startEnd[1][0:2]) * 60) + int(startEnd[1][2:4])
+        resultMinute += (endTime - startTime)
+    return resultMinute
+
+def working_time_startEndList(jsonData, userCode, nowDate, nowTime):
+    size = len(jsonData["workingTimeData"][userCode][nowDate])
+    workdingLog_list = []
+    startEndList = [None, None]
+
+    if size > 0:
+        for i in range(size):
+            workingLog = jsonData["workingTimeData"][userCode][nowDate][i]
+            state = list(workingLog.keys())[0]
+            time = list(workingLog.values())[0]
+            # print(state, time)
+
+            if state == "workingStartTime" or state == "workingCheckTime" or state == "restEndTime":
+                startEndList[0] = time
+
+            elif state == "nonResponseTime" or state == "restStartTime":
+                startEndList[1] = time
+                workdingLog_list.append(startEndList)
+                startEndList = [None, None]
+
+            elif state == "workingEndTime":
+                if startEndList[0] == None:
+                    startEndList[0] = time
+                    startEndList[1] = time
+                else:
+                    startEndList[1] = time
+                workdingLog_list.append(startEndList)
+                startEndList = [None, None]
+
+            if i == size - 1:
+                if startEndList[0] != None and startEndList[1] == None:
+                    startEndList[1] = nowTime
+                    workdingLog_list.append(startEndList)
+                    startEndList = [None, None]
+
+        return workdingLog_list
+
+def user_state_feedback(jsonData, userCode, nowDate):
+    size = len(jsonData["workingTimeData"][userCode][nowDate])
+    if size > 0:
+        state = list(jsonData["workingTimeData"][userCode][nowDate][size-1].keys())[0]
+        time = list(jsonData["workingTimeData"][userCode][nowDate][size-1].values())[0]
+
+        if state == "workingStartTime" or state == "workingCheckTime" or state == "restEndTime":
+            return time[0:2]+"시 " + time[2:4]+ "분 "+"에 working Check하고 일하고 있어요.. 힘내세요!!"
+        elif state == "restStartTime":
+            return time[0:2]+"시 " + time[2:4]+ "분 "+"부터 쉬고 있어요"
+        elif state == "nonResponseTime":
+            return time[0:2]+"시 " + time[2:4]+ "분 "+"부터 응답이 없어요 다시 일을 하실려면, 응, yes, y 입력하세요"
+        elif state == "workingEndTime":
+            return time[0:2]+"시 " + time[2:4]+ "분 "+"에 일하기를 그만했어요. 오늘 하루 수고했어요"
+
+
+    else:
+        return "일을 시작하지 않았어요!"
+    pass
 
 def json_file_yes_insert(jsonData, userCode, nowDate, nowTime):
     size = len(jsonData["workingTimeData"][userCode][nowDate])
