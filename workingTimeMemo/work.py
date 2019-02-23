@@ -1,8 +1,9 @@
 import os
 import re
 import time
-
 import json
+import threading
+
 from collections import OrderedDict
 from pprint import pprint
 from dataHandling import *
@@ -88,7 +89,8 @@ def define_command_func(command, event):
                      ["3", "일종료", "workend", "we"],
                      ["4", "응", "yes", "y"],
                      ["5", "오늘피드백", "feedbacktoday", "fbto"],
-                     ["6", "전체피드백", "feedbackfull", "fbful"]]
+                     ["6", "전체피드백", "feedbackfull", "fbful"],
+                     ["7", "state"]]
     command_juge = False
     command_Number = None
 
@@ -130,6 +132,35 @@ def select_channel_DM(channel, massage):
     )
 
 
+class AsyncTask:
+    def __init__(self):
+        pass
+
+    def TaskA(self):
+        threading.Timer(60, self.TaskA).start()
+
+        workingCheckList = working_check_List()
+        nowTime = time.strftime('%H%M')
+        print(workingCheckList)
+        if nowTime == "2359":
+            ## 정각일때 일하는 사람에게 DM 보내기
+            ## 새롭게 일 시작하라고 알림 하기..
+            ##
+            pass
+
+        for key, value in workingCheckList.items():
+            minNowTime = (int(nowTime[0:2]) * 60) + int(nowTime[2:4])
+            minWorkTime = (int(value[0:2]) * 60) + int(value[2:4])
+            subTime = minNowTime - minWorkTime
+            if subTime >= 30:
+                workingCheckDM(key, nowTime)
+
+
+def asyncTimer():
+    at = AsyncTask()
+    at.TaskA()
+
+
 if __name__ == "__main__":
 
     if slack_client.rtm_connect(with_team_state=False):
@@ -138,7 +169,7 @@ if __name__ == "__main__":
         channel_list = slack_client.api_call("channels.list")
         starterbot_id = slack_client.api_call("auth.test")["user_id"]
         user_list = slack_client.api_call("users.list")
-
+        # print(channel_list)
         ## 유저 코드와 유저 리얼 이름과 매칭
         for user in user_list["members"]:
             userName_code_match[user["id"]] = user["profile"]["real_name_normalized"]
@@ -147,11 +178,15 @@ if __name__ == "__main__":
 
         # print(userName_code_match)
 
+        ## 1분에 한번 비동기로 로직 돌리기.
+        asyncTimer()
+
         ## 슬랙봇 시작.
         while True:
             command, event = sleck_event_sensing(slack_client.rtm_read())
             if command:
                 define_command_func(command, event)
             time.sleep(RTM_READ_DELAY)
+
     else:
         print("Connection failed. Exception traceback printed above.")
