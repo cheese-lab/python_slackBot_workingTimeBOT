@@ -365,3 +365,6 @@ def workingCheckDM(userCode, nowTime):
 def userChannelUpdate(jsonData, userCode, channel):
     jsonData["userDMChannel"][userCode] = channel
     write_json_data(jsonData)
+
+def reset_Working_Event():
+    pass

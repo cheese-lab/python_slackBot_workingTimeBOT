@@ -145,7 +145,7 @@ class AsyncTask:
         if nowTime == "2359":
             ## 정각일때 일하는 사람에게 DM 보내기
             ## 새롭게 일 시작하라고 알림 하기..
-            ##
+            reset_Working_Event()
             pass
 
         for key, value in workingCheckList.items():
