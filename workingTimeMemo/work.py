@@ -143,8 +143,8 @@ class AsyncTask:
         nowTime = time.strftime('%H%M')
         print(workingCheckList)
         if nowTime == "2359":
-            ## 정각일때 일하는 사람에게 DM 보내기
-            ## 새롭게 일 시작하라고 알림 하기..
+            ## 정각일때 일하는 사람에게 새롭게 일 시작하라고 DM 보내기
+            ## 오늘 일한사람들에게 오늘 일한 시간 피드백 DM
             reset_Working_Event()
             pass
 
