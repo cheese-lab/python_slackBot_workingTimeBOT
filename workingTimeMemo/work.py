@@ -26,17 +26,14 @@ def sleck_event_sensing(slack_events):
     for event in slack_events:
         ## bot이 DM 보낸것에는 반능하지 않는다.
         if event["type"] == "message" and (not ("subtype" in event)):
-            print("===================================================")
-            print(event)  ## 이벤트 json
-
-            ## self_call_command 함수에서 자기 자신 호출했는가?
-            # call_juge, command = bot_call_command(event)
 
             bot_id, command = parse_direct_mention(event["text"])
 
             if bot_id == starterbot_id:
-                ## 정해진 호출을 하고 text 입력했으면 명령어가 유효한지 검사.
-                # define_command_func(command, event)
+
+                print("===================================================")
+                print(event)  ## 이벤트 json
+
                 return command, event
     return None, None
 
@@ -58,21 +55,6 @@ def self_call_command(messageJson):
     else:
         return False, None
 
-
-def bot_call_command(messageJson):
-    MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
-    matches = re.search(MENTION_REGEX, messageJson["text"])
-    callUserCode = matches.group(1)
-    command = matches.group(2).strip()
-
-    ## 봇을 호출했는지 검사.
-    if starterbot_id == callUserCode:
-        return True, command
-    else:
-        return False, None
-
-
-##
 def define_command_func(command, event):
     ##정해진 명령어로 들어왔는지 검사한다.
 
@@ -96,7 +78,7 @@ def define_command_func(command, event):
 
     for cmd in defineCommand:
         if command in cmd:
-            print(cmd[0])
+            # print(cmd[0])
             command_Number = cmd[0]
             command_juge = True
             break
@@ -141,7 +123,9 @@ class AsyncTask:
 
         workingCheckList = working_check_List()
         nowTime = time.strftime('%H%M')
-        print(workingCheckList)
+        nowDate = time.strftime('%Y%m%d')
+
+        print(nowDate, nowTime, workingCheckList)
         if nowTime == "2359":
             ## 정각일때 일하는 사람에게 새롭게 일 시작하라고 DM 보내기
             ## 오늘 일한사람들에게 오늘 일한 시간 피드백 DM

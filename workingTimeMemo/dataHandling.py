@@ -31,7 +31,6 @@ def command_User_Event(command_Number, eventJson):
     nowDate = time.strftime('%Y%m%d')
     nowTime = time.strftime('%H%M')
     channel = eventJson["channel"]
-    # print(nowDate)
 
     with open('data.json', encoding="utf-8") as data_file:
         jsonData = json.load(data_file, object_pairs_hook=OrderedDict)
@@ -158,7 +157,6 @@ def working_time_startEndList(jsonData, userCode, nowDate, nowTime):
             workingLog = jsonData["workingTimeData"][userCode][nowDate][i]
             state = list(workingLog.keys())[0]
             time = list(workingLog.values())[0]
-            # print(state, time)
 
             if state == "workingStartTime" or state == "workingCheckTime" or state == "restEndTime":
                 startEndList[0] = time
@@ -377,4 +375,6 @@ def userChannelUpdate(jsonData, userCode, channel):
 
 
 def reset_Working_Event():
+    ## 12시에 현재 일하고 있는 사람들 json 파일에 일종료 메시지 넣기.
+    ## 오늘 일했던 사람들에게 하루동알 일한 시간 DM 날리기.
     pass
