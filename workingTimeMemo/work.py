@@ -129,8 +129,7 @@ class AsyncTask:
         if nowTime == "2359":
             ## 정각일때 일하는 사람에게 새롭게 일 시작하라고 DM 보내기
             ## 오늘 일한사람들에게 오늘 일한 시간 피드백 DM
-            reset_Working_Event()
-            pass
+            reset_Working_Event(workingCheckList)
 
         for key, value in workingCheckList.items():
             minNowTime = (int(nowTime[0:2]) * 60) + int(nowTime[2:4])
@@ -138,7 +137,6 @@ class AsyncTask:
             subTime = minNowTime - minWorkTime
             if subTime >= 30:
                 workingCheckDM(key, nowTime)
-
 
 def asyncTimer():
     at = AsyncTask()

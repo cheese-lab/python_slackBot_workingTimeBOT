@@ -114,6 +114,9 @@ def command_User_Event(command_Number, eventJson):
             DM_str = exceptionDM
             return DM_str
     elif command_Number == 6:
+        # workingCheckList = working_check_List()
+
+        # reset_Working_Event(workingCheckList)
         return DM_str
     elif command_Number == 7:
         exceptionDM = user_state_feedback(jsonData, userCode, nowDate)
@@ -342,17 +345,6 @@ def working_check_List():
     return workingCheckList
 
 
-def working_time_calculation():
-    ## 시간 산출 프로그래밍
-    nowDate = time.strftime('%Y%m%d')
-    with open('data.json', encoding="utf-8") as data_file:
-        jsonData = json.load(data_file, object_pairs_hook=OrderedDict)
-
-    for userCode, objectValue in jsonData["workingTimeData"].items():
-        for arrayValue in objectValue[nowDate]:
-            print(arrayValue)
-
-
 def workingCheckDM(userCode, nowTime):
     with open('data.json', encoding="utf-8") as data_file:
         jsonData = json.load(data_file, object_pairs_hook=OrderedDict)
@@ -374,7 +366,29 @@ def userChannelUpdate(jsonData, userCode, channel):
     write_json_data(jsonData)
 
 
-def reset_Working_Event():
+def reset_Working_Event(workingCheckList):
     ## 12시에 현재 일하고 있는 사람들 json 파일에 일종료 메시지 넣기.
     ## 오늘 일했던 사람들에게 하루동알 일한 시간 DM 날리기.
-    pass
+    with open('data.json', encoding="utf-8") as data_file:
+        jsonData = json.load(data_file, object_pairs_hook=OrderedDict)
+
+    nowTime = time.strftime('%H%M')
+    nowDate = time.strftime('%Y%m%d')
+    workingEndInsert = {"workingEndTime": nowTime}
+
+    for key, value in workingCheckList.items():
+        jsonData["workingTimeData"][key][nowDate].append(workingEndInsert)
+
+    write_json_data(jsonData)
+
+    ## 오늘 일한 모든 사람에게 일한 시간 DM 날리기.
+    for userCode, objectValue in jsonData["workingTimeData"].items():
+        if nowDate in objectValue:
+            startEndList = working_time_startEndList(jsonData, userCode, nowDate, nowTime)
+            resultMinute = startEndTime_calculation(startEndList)
+            h = str(int(resultMinute / 60))
+            m = str(resultMinute % 60)
+
+            channel = jsonData["userDMChannel"][userCode]
+            todayfeedBackDM = "<@" + userCode + "> 님이 [" + nowDate + "] 하루" + h + "시간" + m + "분 동안 일했습니다."
+            select_channel_DM(channel, todayfeedBackDM)
