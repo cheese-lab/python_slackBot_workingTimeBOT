@@ -105,12 +105,14 @@ def define_command_func(command, event):
         select_channel_DM(channel, notDefineCommand)
 
 
-def select_channel_DM(channel, massage):
+def select_channel_DM(channel, message):
     # Sends the response back to the channel
     slack_client.api_call(
         "chat.postMessage",
+        # botname 설정 & massage => message 오타 수정
+        username='hansonbot',
         channel=channel,
-        text=massage
+        text=message
     )
 
 
